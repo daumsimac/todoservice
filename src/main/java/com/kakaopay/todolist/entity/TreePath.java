@@ -8,8 +8,13 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name="table_path")
-public class TablePath {
+@Table(name="tree_paths")
+public class TreePath {
+    public TreePath (int ancestor, int descendant) {
+        this.ancestor = ancestor;
+        this.descendant = descendant;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")

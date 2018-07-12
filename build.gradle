@@ -1,19 +1,23 @@
 buildscript {
-	ext {
-		springBootVersion = '1.5.14.RELEASE'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+    ext {
+        springBootVersion = '1.5.14.RELEASE'
+        querydslVersion='4.1.4'
+    }
+    repositories {
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("io.franzbecker:gradle-lombok:1.8")
+    }
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'io.franzbecker.gradle-lombok'
 
 group = 'com.kakaopay'
 version = '0.0.1'
@@ -21,21 +25,66 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
+def queryDslOutput = file("src-gen/main/java")
+
+sourceSets {
+    main.java.srcDirs=['src/main/java', 'src-gen/main/java']
+    main.resources.srcDirs=['src/main/resources']
+}
+
+task generateQueryDSL(type: JavaCompile, group: 'build') {
+    doFirst {
+        if (!queryDslOutput.exists()) {
+            logger.info("Creating `$queryDslOutput` directory")
+
+            if (!queryDslOutput.mkdirs()) {
+                throw new InvalidUserDataException("Unable to create `$queryDslOutput` directory")
+            }
+        }
+    }
+
+    source = sourceSets.main.java
+    classpath = configurations.compile
+    options.compilerArgs = [
+            "-proc:only",
+            "-processor",
+            'com.querydsl.apt.jpa.JPAAnnotationProcessor,lombok.launch.AnnotationProcessorHider$AnnotationProcessor'
+    ]
+    destinationDir = queryDslOutput
+}
+
+compileJava.dependsOn(generateQueryDSL)
+compileTestJava.dependsOn(generateQueryDSL)
+
+clean {
+    delete queryDslOutput
+}
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
-	compile('org.springframework.boot:spring-boot-starter-web')
-	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
-	runtime('org.springframework.boot:spring-boot-devtools')
-	
-	runtime('com.h2database:h2')
-	compileOnly('org.projectlombok:lombok')
-	
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+    compile('org.springframework.boot:spring-boot-starter-web-services')
+    runtime('org.springframework.boot:spring-boot-devtools')
+
+    compile('javax.servlet:jstl')
+    compileOnly('org.apache.tomcat.embed:tomcat-embed-jasper')
+
+    runtime('com.h2database:h2')
+    compileOnly('org.projectlombok:lombok')
+
+    compile ("com.querydsl:querydsl-core:${querydslVersion}")
+    compile ("com.querydsl:querydsl-apt:${querydslVersion}")
+    compile ("com.querydsl:querydsl-jpa:${querydslVersion}")
+
+    compile ("ch.simas.qlrm:qlrm:1.7.1")
+
     compile('io.springfox:springfox-swagger2:2.8.0')
     compile('io.springfox:springfox-swagger-ui:2.8.0')
-		
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
 }

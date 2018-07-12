@@ -13,10 +13,10 @@ import java.util.Date;
 public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "todo", length = 150, nullable = false)
+    @Column(name = "todo")
     private String todo;
 
     @Column(name = "created_at")
