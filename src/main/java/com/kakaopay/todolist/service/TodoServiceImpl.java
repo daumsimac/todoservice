@@ -2,7 +2,6 @@ package com.kakaopay.todolist.service;
 
 import com.kakaopay.todolist.dto.TodoDTO;
 import com.kakaopay.todolist.entity.Todo;
-import com.kakaopay.todolist.entity.TreePath;
 import com.kakaopay.todolist.exception.ContentNotFoundException;
 import com.kakaopay.todolist.repository.TodoRepository;
 import com.kakaopay.todolist.repository.TreePathRepository;
@@ -10,11 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -41,6 +38,12 @@ public class TodoServiceImpl implements TodoService {
 
         if (todoDTO.getParentId() == null) {
             todoDTO.setParentId(todo.getId());
+        }
+        else {
+            Optional<Todo> todoOptional = todoRepository.findById(todoDTO.getParentId());
+            if (todoOptional.isPresent() == false) {
+                throw new ContentNotFoundException("Couldn't find parent TODO(" + todoDTO.getParentId() + ")");
+            }
         }
 
         treePathRepository.createTreePathByRootIdAndLeafId(todoDTO.getParentId(), todo.getId());

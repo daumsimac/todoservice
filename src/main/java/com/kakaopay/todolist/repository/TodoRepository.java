@@ -7,5 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TodoRepository extends JpaRepository<Todo, Integer> {
-    Optional<Todo> findById (Integer id);
+    Optional<Todo> findById (int id);
+
+    void deleteById (int id);
 }

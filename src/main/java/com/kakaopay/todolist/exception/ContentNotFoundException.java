@@ -1,6 +1,6 @@
 package com.kakaopay.todolist.exception;
 
-public class ContentNotFoundException extends Exception {
+public class ContentNotFoundException extends RuntimeException {
     public ContentNotFoundException () {
         super();
     }

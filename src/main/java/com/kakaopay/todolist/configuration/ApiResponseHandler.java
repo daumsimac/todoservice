@@ -26,7 +26,7 @@ public class ApiResponseHandler implements ResponseBodyAdvice<Object> {
                     ContentNotFoundException.class
             }
     )
-    public ApiErrorResponse handleNotFoundError (final Exception e, HttpServletResponse response) {
+    public ApiErrorResponse handleNotFoundException (final Exception e, HttpServletResponse response) {
         log.error(e.getMessage(), e);
 
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -44,10 +44,6 @@ public class ApiResponseHandler implements ResponseBodyAdvice<Object> {
                                   Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                   ServerHttpRequest request, ServerHttpResponse response) {
         HttpStatus httpStatus = HttpStatus.OK;
-
-        if (body == null) {
-            return new ApiErrorResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "InternalException");
-        }
 
         ApiResponse apiResponse;
         if (body instanceof ApiResponse) {
