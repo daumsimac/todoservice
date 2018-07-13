@@ -1,17 +1,15 @@
 package com.kakaopay.todolist.controller;
 
-import com.kakaopay.todolist.dto.SearchOption;
 import com.kakaopay.todolist.dto.TodoDTO;
-import com.kakaopay.todolist.entity.Todo;
 import com.kakaopay.todolist.service.TodoService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.awt.print.Pageable;
 
 @RestController
 public class TodoController {
@@ -27,7 +25,7 @@ public class TodoController {
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE },
             consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
-    public Todo createTodo (@RequestBody TodoDTO todoDTO) throws Exception {
+    public TodoDTO.CreateResponse createTodo (@RequestBody TodoDTO.CreateRequest todoDTO) {
         return todoService.create(todoDTO);
     }
 
@@ -35,12 +33,12 @@ public class TodoController {
             @ApiImplicitParam(name="test", dataType = "string", paramType = "query", value="Test")
     )
     @PutMapping(
-            value = "/api/v1/todo",
+            value = "/api/v1/todo/{id}",
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE },
             consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
-    public Todo updateTodo (@RequestBody TodoDTO todoDTO) {
-        return todoService.update(todoDTO);
+    public TodoDTO.UpdateResponse updateTodo (@PathVariable("id") int id, @RequestBody TodoDTO.UpdateRequest todoDTO) {
+        return todoService.update(id, todoDTO);
     }
 
     @ApiImplicitParams(
@@ -50,23 +48,25 @@ public class TodoController {
             value = "/api/v1/todo/{id}",
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
-    public Todo deleteTodo (@PathVariable("id") int id) {
-        return todoService.delete(id);
+    public ResponseEntity<?> deleteTodo (@PathVariable("id") int id) {
+        todoService.delete(id);
+
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping(
             value = "/api/v1/todo/{id}/complete",
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
-    public Todo complete (@PathVariable("id") int id) {
-        return null;
+    public TodoDTO.UpdateResponse complete (@PathVariable("id") int id) {
+        return todoService.complete(id);
     }
 
     @GetMapping(
             value = "/api/v1/todo/{id}",
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
-    public Todo getTodo (@PathVariable("id") int id) {
+    public TodoDTO.FindOneResponse getTodo (@PathVariable("id") int id) {
         return todoService.get(id);
     }
 
@@ -77,8 +77,7 @@ public class TodoController {
             value = "/api/v1/todos",
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
-    public ResponseEntity<?> getTodos (SearchOption searchOption, Pageable pageable) {
-        // TODO : Implement me
-        return null;
+    public Page<TodoDTO.FindAllResponse> getTodos (Pageable pageable) {
+        return todoService.findAll(pageable);
     }
 }

@@ -1,15 +1,10 @@
 package com.kakaopay.todolist.repository;
 
-import com.kakaopay.todolist.entity.QTreePath;
-import com.querydsl.jpa.JPQLQuery;
-import org.qlrm.mapper.JpaResultMapper;
 import com.kakaopay.todolist.entity.TreePath;
 import org.springframework.data.jpa.repository.support.QueryDslRepositorySupport;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TreePathRepositoryImpl extends QueryDslRepositorySupport implements TreePathRepositoryCustom {
 
@@ -34,6 +29,8 @@ public class TreePathRepositoryImpl extends QueryDslRepositorySupport implements
         qry.setParameter(1, rootId);
 
         qry.executeUpdate();
+
+        em.close();
     }
 
     public void detachFromTree (int subTreeRootId) {
@@ -61,6 +58,8 @@ public class TreePathRepositoryImpl extends QueryDslRepositorySupport implements
         qry.setParameter(2, subTreeRootId);
 
         qry.executeUpdate();
+
+        em.close();;
     }
 
     public void moveSubTreeTo (int subTreeRootId, int moveTo) {
@@ -81,6 +80,8 @@ public class TreePathRepositoryImpl extends QueryDslRepositorySupport implements
         qry.setParameter(2, subTreeRootId);
 
         qry.executeUpdate();
+
+        em.close();;
     }
 
 }

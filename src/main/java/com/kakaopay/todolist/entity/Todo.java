@@ -17,8 +17,11 @@ public class Todo {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "todo")
-    private String todo;
+    @Column(name = "content")
+    private String content;
+
+    @Column(name = "display_content")
+    private String displayContent;
 
     @Column(name = "created_at")
     private Date createdAt;
@@ -26,8 +29,8 @@ public class Todo {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @Column(name = "confirmed_at")
-    private Date confirmedAt;
+    @Column(name = "completed_at")
+    private Date completedAt;
 
     @OneToMany(mappedBy = "descendant", targetEntity = TreePath.class, fetch = FetchType.LAZY)
     private List<TreePath> ancestors;

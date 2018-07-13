@@ -1,7 +1,7 @@
 buildscript {
     ext {
         springBootVersion = '1.5.14.RELEASE'
-        querydslVersion='4.1.4'
+        querydslVersion='4.2.1'
     }
     repositories {
         mavenCentral()
@@ -80,11 +80,19 @@ dependencies {
     compile ("com.querydsl:querydsl-core:${querydslVersion}")
     compile ("com.querydsl:querydsl-apt:${querydslVersion}")
     compile ("com.querydsl:querydsl-jpa:${querydslVersion}")
+    compile ("com.querydsl:querydsl-sql:${querydslVersion}")
 
     compile ("ch.simas.qlrm:qlrm:1.7.1")
 
+    compile ('org.modelmapper:modelmapper:2.1.0')
+
+
     compile('io.springfox:springfox-swagger2:2.8.0')
     compile('io.springfox:springfox-swagger-ui:2.8.0')
+
+    compile('org.webjars:jquery:3.3.1')
+    compile('org.webjars:bootstrap:4.0.0')
+
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }

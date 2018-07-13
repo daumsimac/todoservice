@@ -15,11 +15,6 @@ import javax.persistence.*;
         }
 )
 public class TreePath {
-    public TreePath (int ancestor, int descendant) {
-        this.ancestor = ancestor;
-        this.descendant = descendant;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -30,7 +25,4 @@ public class TreePath {
 
     @Column(name = "descendant")
     private Integer descendant;
-
-    @Column(name = "depth")
-    private Integer depth;
 }

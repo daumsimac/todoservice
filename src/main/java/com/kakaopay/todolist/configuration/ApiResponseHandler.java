@@ -3,6 +3,8 @@ package com.kakaopay.todolist.configuration;
 import com.kakaopay.todolist.dto.ApiErrorResponse;
 import com.kakaopay.todolist.dto.ApiResponse;
 import com.kakaopay.todolist.exception.ContentNotFoundException;
+import com.kakaopay.todolist.exception.InvalidMoveTargetException;
+import com.kakaopay.todolist.exception.TodoDependencyException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
@@ -26,12 +29,26 @@ public class ApiResponseHandler implements ResponseBodyAdvice<Object> {
                     ContentNotFoundException.class
             }
     )
-    public ApiErrorResponse handleNotFoundException (final Exception e, HttpServletResponse response) {
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiErrorResponse handleNotFoundException (final Exception e) {
         log.error(e.getMessage(), e);
 
-        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        return new ApiErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
+    }
 
-        return new ApiErrorResponse(response.getStatus(), e.getMessage());
+    @ExceptionHandler(
+            value = {
+                    InvalidMoveTargetException.class,
+                    TodoDependencyException.class
+            }
+    )
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiErrorResponse handleBadRequestException (final Exception e) {
+        log.error(e.getMessage(), e);
+
+        return new ApiErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());
     }
 
     @Override
@@ -45,15 +62,20 @@ public class ApiResponseHandler implements ResponseBodyAdvice<Object> {
                                   ServerHttpRequest request, ServerHttpResponse response) {
         HttpStatus httpStatus = HttpStatus.OK;
 
-        ApiResponse apiResponse;
+        Object ret = null;
         if (body instanceof ApiResponse) {
-            apiResponse = (ApiResponse) body;
+            ApiResponse apiResponse = (ApiResponse) body;
 
             try {
                 httpStatus = HttpStatus.valueOf(apiResponse.getCode());
                 response.setStatusCode(httpStatus);
+
+                ret = response;
             }
             catch (IllegalArgumentException iae) {}
+        }
+        else if (body instanceof ApiErrorResponse) {
+            ret = body;
         }
         else {
             for (Annotation annotation : returnType.getMethodAnnotations()) {
@@ -64,9 +86,9 @@ public class ApiResponseHandler implements ResponseBodyAdvice<Object> {
                 }
             }
 
-            apiResponse = new ApiResponse(httpStatus.value(), body);
+            ret = new ApiResponse(httpStatus.value(), body);
         }
 
-        return apiResponse;
+        return ret;
     }
 }

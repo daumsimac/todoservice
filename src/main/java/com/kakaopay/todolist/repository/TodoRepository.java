@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public interface TodoRepository extends JpaRepository<Todo, Integer> {
+public interface TodoRepository extends JpaRepository<Todo, Integer>, TodoRepositoryCustom {
     Optional<Todo> findById (int id);
 
     List<Todo> findByIdIn (List<Integer> ids);

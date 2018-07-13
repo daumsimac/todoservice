@@ -1,15 +1,19 @@
 package com.kakaopay.todolist.service;
 
-import com.kakaopay.todolist.dto.ApiResponse;
 import com.kakaopay.todolist.dto.TodoDTO;
-import com.kakaopay.todolist.entity.Todo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface TodoService {
-    Todo create (TodoDTO todoDTO);
+    TodoDTO.CreateResponse create (TodoDTO.CreateRequest todoDTO);
 
-    Todo delete (int id);
+    void delete (int id);
 
-    Todo update (TodoDTO todoDto);
+    TodoDTO.UpdateResponse update (int id, TodoDTO.UpdateRequest todoDto);
 
-    Todo get (int id);
+    TodoDTO.FindOneResponse get (int id);
+
+    TodoDTO.UpdateResponse complete (int id);
+
+    Page<TodoDTO.FindAllResponse> findAll (Pageable pageable);
 }

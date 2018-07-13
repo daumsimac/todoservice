@@ -9,8 +9,14 @@
 - Frontend
 
 **Build**
+```
+$ ./gradlew clean build
+```
 
 **Excute**
+```
+$ ./startup.sh
+```
 
 **API Document**
 
@@ -83,4 +89,33 @@
   * 자신의 새로운 부모가 될 node를 descendant로 가지는 모든 row들과 자신을 ancestor로 가지는 모든 row들을 cross join하여 tree_paths에 추가한다.
   * 이 방법으로 기존에 있던 자신의 tree path 정보는 모두 삭제하고 새로운 tree path 정보를 저장할 수 있다.
   * 자기 자신의 자손의 하위 노드로 이동은 불가능하다.
-   
+
+* 경로열거를 응용하여 화면에 표시할 할일을 따로 저장
+  * 요구사항에 나온대로 참조가 걸린 Parent를 화면에 표시하기 위해서 다음과 같은 방법이 있을 수 있다.
+    * Listing API에서 각 entry에 ancestor의 ID를 주고 Client에서 알아서 처리하라고 한다. -> 경험상 클라이언트 개발자들이 싫어함.
+    * 매번 조회할 때 마다 부모의 정보를 얻어와서 문자열을 조합하여 응답을 보내준다.
+    * todos table에 경로열거 방식으로 display_content column을 추가하고 생성, 부모 변경과 같은 작업이 일어날 때 자신을 root로 하는 subtree의 display_content를 갱신.
+  * 세번째 방법을 선택하기로 하였다. 이유는 부모 변경은 자주 발생할 것 같지 않으며 생성할 때 
+     자신의 조상들의 정보를 얻어서 저장해뒀다가 조회시 단순히 보여주는 것이 매번 조회 시 자신의 조상들을 조회하여 문자열을 만드는 것 보다
+     효율적이라고 생각하였다.
+
+#### 2. 3. Persistent Layer 구현
+
+* EntityManager를 이용한 Native Query 작성
+  * 가급적 JPA를 이용하여 ORM으로 처리하는 것을 처음 설계를 하였을 때 원칙으로 하였다.
+  * Closer Table을 ORM으로 표현하려고 하다 보니 난처한 점들이 생겼다.
+    * JPQL은 UNION을 지원하지 않는다.
+    * JPQL은 INSERT INTO SELECT도 지원하지 않는다.
+    * 위 두가지 이유로 tree_path table의 repository는 모두 native query로 처리하였다.
+    * JPQLTemplates에서 group_concat을 지원하지 않는다.
+    * 위 이유로 todos table의 display_content를 생성하는 기능을 native query로 처리하였다.
+* QueryDSL을 이용하여 자손들 중 완료되지 않은 할일을 찾거나 Subtree root를 기준으로 모든 자손들을 찾는 기능 작성
+  * JPA Repository에서 제공하는 기능만으로는 두개의 table을 참조하여 원하는 기능을 얻기 어렵다고 판단하였다.
+  * QueryDSL을 이용하여 구현
+
+```
+가급적 쿼리에 로직이 들어가는 것은 피해야 한다고 생각한다 
+하지만, 이번 Close Table 같은 경우는 DB를 이용하여 Tree라는 자료구조를 표현하는것이기 때문에 Tree에 연관된 로직을
+구현하는 것으로 제한한다면 괜찮은 접근방법이 될 것이라 생각하여 위와 같이 Close Table 접근부를 작성하였다.
+```
+
