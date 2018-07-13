@@ -111,7 +111,6 @@ public class TodoServiceImpl implements TodoService {
             throw new ContentNotFoundException("Couldn't find TODO(" + id + ")");
         }
 
-        log.info("TEST : " + optionalTodo.get());
         return optionalTodo.get();
     }
 
