@@ -9,7 +9,7 @@ public interface TreePathRepositoryCustom {
 
     List<TreePath> getTreePathByRootIdAndLeafId (int rootId, int leafId);
 
-    void deleteAncestorsWithoutSelf (int id);
+    void detachFromTree (int subTreeRootId);
 
     void moveSubTreeTo (int subTreeRootId, int moveTo);
 

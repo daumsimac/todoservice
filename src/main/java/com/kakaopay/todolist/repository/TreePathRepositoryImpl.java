@@ -57,7 +57,7 @@ public class TreePathRepositoryImpl extends QueryDslRepositorySupport implements
         return jpaResultMapper.list(qry, TreePath.class);
     }
 
-    public void deleteAncestorsWithoutSelf (int id) {
+    public void detachFromTree (int subTreeRootId) {
         StringBuffer sb = new StringBuffer();
 
         sb.append("DELETE\n");
@@ -78,8 +78,8 @@ public class TreePathRepositoryImpl extends QueryDslRepositorySupport implements
 
         Query qry = em.createNativeQuery(sb.toString());
 
-        qry.setParameter(1, id);
-        qry.setParameter(2, id);
+        qry.setParameter(1, subTreeRootId);
+        qry.setParameter(2, subTreeRootId);
 
         qry.executeUpdate();
     }
@@ -87,7 +87,7 @@ public class TreePathRepositoryImpl extends QueryDslRepositorySupport implements
     public void moveSubTreeTo (int subTreeRootId, int moveTo) {
         StringBuffer sb = new StringBuffer();
 
-        sb.append("INSERT INTO TreePaths (ancestor, descendant)\n");
+        sb.append("INSERT INTO tree_paths (ancestor, descendant)\n");
         sb.append("SELECT tree.ancestor, subtree.descendant\n");
         sb.append("  FROM tree_paths AS tree\n");
         sb.append("CROSS JOIN tree_paths AS subtree\n");

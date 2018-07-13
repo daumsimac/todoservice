@@ -77,6 +77,7 @@ public class TodoServiceImpl implements TodoService {
                         ") to child TODO(" + todoDTO.getParentId() + ")");
             }
 
+            treePathRepository.detachFromTree(todo.getId());
             treePathRepository.moveSubTreeTo(todo.getId(), todoDTO.getParentId());
         }
 
