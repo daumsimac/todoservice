@@ -1,14 +1,15 @@
 package com.kakaopay.todolist.service;
 
+import com.kakaopay.todolist.dto.ApiResponse;
 import com.kakaopay.todolist.dto.TodoDTO;
 import com.kakaopay.todolist.entity.Todo;
 
 public interface TodoService {
-    Todo create (TodoDTO todoDTO) throws Exception;
+    Todo create (TodoDTO todoDTO);
 
-    void delete (int id);
+    Todo delete (int id);
 
-    void update (TodoDTO todoDto);
+    Todo update (TodoDTO todoDto);
 
-    Todo get (int id) throws Exception;
+    Todo get (int id);
 }

@@ -69,3 +69,18 @@
 |     3    |     4      |
 |     4    |     4      |
 ----
+* 노드 추가 전략
+  * 자기 자신을 참조하는 row를 tree_paths에 추가한다.
+  * parent가 주어진 경우 parent의 모든 descendant를 자신의 ancestor로 자신의 ID는 descendant로 가지는 row들을 만들어서 tree_paths에 추가한다.
+  * 이런 방식으로 tree_paths에 row를 추가하면 자신의 조상, 자손들을 모두 DB table로 표현 가능하며 한번의 query로 자신의 조상과 자손들의 ID를 얻어오는 것이 가능하다.
+ 
+* 노드 삭제 전략
+  * 자기 자신을 ancestor로 가지는 모든 row들과 자기 자신을 descendant로 가지는 모든 row들을 삭제한다.
+  * 이렇게 하면 자기 자신을 포함한 자신의 descendant들을 모두 제거할 수 있다.
+
+* 노드 이동 전략
+  * 자기 자신을 descendant로 가지는 모든 row들을 제거한다. 단, 이때 자기 자신을 참조하는 row는 삭제하지 않는다.
+  * 자신의 새로운 부모가 될 node를 descendant로 가지는 모든 row들과 자신을 ancestor로 가지는 모든 row들을 cross join하여 tree_paths에 추가한다.
+  * 이 방법으로 기존에 있던 자신의 tree path 정보는 모두 삭제하고 새로운 tree path 정보를 저장할 수 있다.
+  * 자기 자신의 자손의 하위 노드로 이동은 불가능하다.
+   

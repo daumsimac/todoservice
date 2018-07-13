@@ -8,7 +8,12 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name="tree_paths")
+@Table(
+        name="tree_paths",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"ancestor", "descendant"})
+        }
+)
 public class TreePath {
     public TreePath (int ancestor, int descendant) {
         this.ancestor = ancestor;

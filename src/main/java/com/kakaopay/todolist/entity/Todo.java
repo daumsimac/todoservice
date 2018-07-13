@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -27,4 +28,10 @@ public class Todo {
 
     @Column(name = "confirmed_at")
     private Date confirmedAt;
+
+    @OneToMany(mappedBy = "descendant", targetEntity = TreePath.class, fetch = FetchType.LAZY)
+    private List<TreePath> ancestors;
+
+    @OneToMany(mappedBy = "ancestor", targetEntity = TreePath.class, fetch = FetchType.LAZY)
+    private List<TreePath> descendants;
 }

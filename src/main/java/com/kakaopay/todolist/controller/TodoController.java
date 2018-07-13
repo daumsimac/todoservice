@@ -35,13 +35,12 @@ public class TodoController {
             @ApiImplicitParam(name="test", dataType = "string", paramType = "query", value="Test")
     )
     @PutMapping(
-            value = "/api/v1/todo/{id}",
+            value = "/api/v1/todo",
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE },
             consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
-    public ResponseEntity<?> updateTodo () {
-        // TODO : Implement me
-        return null;
+    public Todo updateTodo (@RequestBody TodoDTO todoDTO) {
+        return todoService.update(todoDTO);
     }
 
     @ApiImplicitParams(
@@ -49,10 +48,17 @@ public class TodoController {
     )
     @DeleteMapping(
             value = "/api/v1/todo/{id}",
-            consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE }
+            produces = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
-    public ResponseEntity<?> deleteTodo () {
-        // TODO : Implement me
+    public Todo deleteTodo (@PathVariable("id") int id) {
+        return todoService.delete(id);
+    }
+
+    @PostMapping(
+            value = "/api/v1/todo/{id}/complete",
+            produces = { MediaType.APPLICATION_JSON_UTF8_VALUE }
+    )
+    public Todo complete (@PathVariable("id") int id) {
         return null;
     }
 
@@ -60,7 +66,7 @@ public class TodoController {
             value = "/api/v1/todo/{id}",
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
-    public Todo getTodo (@PathVariable("id") int id) throws Exception {
+    public Todo getTodo (@PathVariable("id") int id) {
         return todoService.get(id);
     }
 

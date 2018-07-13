@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TodoDTO {
+    @JsonProperty
+    private Integer id;
+
     @JsonProperty("todo")
     private String todo;
 
