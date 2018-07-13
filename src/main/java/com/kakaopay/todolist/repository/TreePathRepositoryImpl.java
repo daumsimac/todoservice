@@ -36,27 +36,6 @@ public class TreePathRepositoryImpl extends QueryDslRepositorySupport implements
         qry.executeUpdate();
     }
 
-    public List<TreePath> getTreePathByRootIdAndLeafId (int rootId, int leafId) {
-        EntityManager em = getEntityManager();
-
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("SELECT t.ancestor, ");
-        sb.append(leafId);
-        sb.append("  FROM tree_paths t WHERE t.descendant = ?1 UNION ALL SELECT ");
-        sb.append(leafId);
-        sb.append(",");
-        sb.append(leafId);
-
-        Query qry  = em.createNativeQuery(sb.toString());
-
-        qry.setParameter(1, rootId);
-
-        JpaResultMapper jpaResultMapper = new JpaResultMapper();
-
-        return jpaResultMapper.list(qry, TreePath.class);
-    }
-
     public void detachFromTree (int subTreeRootId) {
         StringBuffer sb = new StringBuffer();
 
@@ -104,22 +83,4 @@ public class TreePathRepositoryImpl extends QueryDslRepositorySupport implements
         qry.executeUpdate();
     }
 
-    public List<Integer> getAncestorByDescendantWithoutSelf (int descendant) {
-        String queryString = "SELECT ancestor FROM tree_paths WHERE descendant = ?1 AND ancestor != descendant";
-
-        EntityManager em = getEntityManager();
-
-        Query qry = em.createNamedQuery(queryString);
-
-        qry.setParameter(1, descendant);
-
-        List<Object[]> resultList = qry.getResultList();
-
-        List<Integer> ret = new ArrayList<>();
-        for (Object[] o : resultList) {
-            ret.add((Integer) o[0]);
-        }
-
-        return ret;
-    }
 }
