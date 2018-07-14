@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 public interface TodoService {
     TodoDTO.CreateResponse create (TodoDTO.CreateRequest todoDTO);
 
-    void delete (int id);
+    TodoDTO.DeleteResponse delete (int id);
 
     TodoDTO.UpdateResponse update (int id, TodoDTO.UpdateRequest todoDto);
 

@@ -70,6 +70,17 @@ public class TodoDTO {
     public static class UpdateResponse extends ResponseBase {
         @JsonProperty("updated_at")
         private Date updatedAt;
+
+        @JsonProperty("completed_at")
+        private Date completedAt;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @EqualsAndHashCode(callSuper = false)
+    public static class DeleteResponse extends ResponseBase {
     }
 
     @Data

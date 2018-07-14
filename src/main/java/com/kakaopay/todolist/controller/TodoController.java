@@ -48,10 +48,8 @@ public class TodoController {
             value = "/api/v1/todo/{id}",
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
-    public ResponseEntity<?> deleteTodo (@PathVariable("id") int id) {
-        todoService.delete(id);
-
-        return ResponseEntity.ok().build();
+    public TodoDTO.DeleteResponse deleteTodo (@PathVariable("id") int id) {
+        return todoService.delete(id);
     }
 
     @PostMapping(

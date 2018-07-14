@@ -81,14 +81,14 @@ public class TodoServiceImpl implements TodoService {
         todoRepository.save(todo);
 
         if (todoDTO.getParentId() != null) {
-            moveSubtree(id, todoDTO, todo);
+            moveSubtree(todo, todoDTO);
         }
 
         return modelMapper.map(todo, TodoDTO.UpdateResponse.class);
     }
 
     @Transactional
-    public void delete (int id) {
+    public TodoDTO.DeleteResponse delete (int id) {
         Optional<Todo> optionalTodo = null;
         if ((optionalTodo = getTodo(id)).isPresent() == false) {
             throw new ContentNotFoundException("Couldn't find TODO(" + id + ")");
@@ -103,6 +103,8 @@ public class TodoServiceImpl implements TodoService {
 
         treePathRepository.deleteByDescendantIn(deleteIds);
         todoRepository.deleteByIdIn(deleteIds);
+
+        return modelMapper.map(optionalTodo.get(), TodoDTO.DeleteResponse.class);
     }
 
     @Transactional
@@ -159,20 +161,16 @@ public class TodoServiceImpl implements TodoService {
         return (todoRepository.countByNotCompletedDescendants(todoId) == 0);
     }
 
-    private void moveSubtree (int id, TodoDTO.UpdateRequest todoDTO, Todo todo) {
-        if (getTodo(todoDTO.getParentId()).isPresent() == false) {
-            throw new ContentNotFoundException("Couldn't find TODO(" + todoDTO.getParentId() + ")");
-        }
-
-        if (!movable(id, todoDTO.getParentId())) {
-            throw new InvalidMoveTargetException("Couldn't move TODO(" + id +
+    private void moveSubtree (Todo todo, TodoDTO.UpdateRequest todoDTO) {
+        if (!movable(todo.getId(), todoDTO.getParentId())) {
+            throw new InvalidMoveTargetException("Couldn't move TODO(" + todo.getId() +
                     ") to child TODO(" + todoDTO.getParentId() + ")");
         }
 
         treePathRepository.detachFromTree(todo.getId());
         treePathRepository.moveSubTreeTo(todo.getId(), todoDTO.getParentId());
 
-        treePathRepository.findByAncestor(id).stream().forEach(treePath -> {
+        treePathRepository.findByAncestor(todo.getId()).stream().forEach(treePath -> {
             Optional<Todo> ot = getTodo(treePath.getDescendant());
             if (ot.isPresent() == false) {
                 throw new ContentNotFoundException("Couldn't find TODO(" + treePath.getDescendant() + ")");
@@ -183,6 +181,7 @@ public class TodoServiceImpl implements TodoService {
             if (displayContent == null) {
                 displayContent = td.getContent();
             }
+
             td.setDisplayContent(displayContent);
 
             todoRepository.save(td);
