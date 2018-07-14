@@ -50,12 +50,15 @@ public class TodoRepositoryImpl extends QueryDslRepositorySupport implements Tod
         EntityManager em = getEntityManager();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT CONCAT(td.content, ");
-        sb.append("GROUP_CONCAT(CONCAT(' @', tp.ancestor) SEPARATOR ' ')) AS DISPLAY_CONTENT ");
-        sb.append("FROM todos td ");
-        sb.append("INNER JOIN tree_paths tp ON tp.descendant = ?1 AND tp.ancestor <> tp.descendant ");
-        sb.append(" WHERE td.id = ?2 ");
-        sb.append("GROUP BY td.id");
+
+        sb.append("SELECT CONCAT(content, GROUP_CONCAT(CONCAT(' @', ancestor) SEPARATOR ' ')) AS display_content\n");
+        sb.append("  FROM (\n");
+        sb.append("        SELECT td.content, tp.ancestor\n");
+        sb.append("          FROM todos td\n");
+        sb.append("        INNER JOIN tree_paths tp ON tp.descendant = ?1 AND tp.ancestor <> tp.descendant\n");
+        sb.append("         WHERE td.id = ?2\n");
+        sb.append("        ORDER BY tp.ancestor\n");
+        sb.append("       ) tmp GROUP by content");
 
         Query query = em.createNativeQuery(sb.toString());
 
