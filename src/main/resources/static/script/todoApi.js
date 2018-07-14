@@ -3,6 +3,19 @@
 let todoApi = (() => {
     const API_PREFIX = '/api/v1/todos/';
 
+    function _getTodos (callback) {
+        $.ajax({
+            url : API_PREFIX,
+            method : 'get',
+        }).then((response) => {
+            callback(null, response);
+        }).catch((response) => {
+            let responseBody = response.responseBody;
+            let message = responseBody.message;
+            callback(message, responseBody);
+        });
+    }
+
     function _createTodo (param, callback) {
         $.ajax({
             url : API_PREFIX,
@@ -20,6 +33,7 @@ let todoApi = (() => {
     }
 
     return {
+        getTodos : _getTodos,
         createTodo : _createTodo
     };
 })();
