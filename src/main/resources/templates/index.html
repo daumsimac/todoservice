@@ -5,6 +5,8 @@
         <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.min.css}"/>
         <script type="text/javascript" th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
         <script type="text/javascript" th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.min.js}"></script>
+        <script type="text/javascript" th:src="@{/script/todoApi.js}"></script>
+        <script type="text/javascript" th:src="@{/script/todo.js}"></script>
 
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -12,9 +14,44 @@
     </head>
 
     <body>
-        <div class="form-group">
-            <input id="main-input" type="text" class="form-control" placeholder="할일을 적어주세요." />
+        <div class="container">
+            <table>
+                <colgroup>
+                    <col width="80%" />
+                    <col width="10%" />
+                    <col width="10%" />
+                </colgroup>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <input id="todo-input" type="text" class="form-control" placeholder="할일을 적어주세요." />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            테스트
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-success" id="add-todo-button">할일 추가</button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
-        <button type="button" class="btn btn-success" id="main-button">할일 추가</button>
+        <div class="container">
+            <table class="table table-striped">
+                <thread>
+                    <th>번호</th>
+                    <th>할일</th>
+                    <th>작성일시</th>
+                    <th>최종수정일시</th>
+                    <th>완료처리</th>
+                </thread>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </body>
 </html>

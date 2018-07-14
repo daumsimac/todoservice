@@ -106,6 +106,7 @@ $ ./startup.sh
   * Closer Table을 ORM으로 표현하려고 하다 보니 난처한 점들이 생겼다.
     * JPQL은 UNION을 지원하지 않는다.
     * JPQL은 INSERT INTO SELECT도 지원하지 않는다.
+    * ~~DELETE하는 건..그냥 넘어가자.~~
     * 위 두가지 이유로 tree_path table의 repository는 모두 native query로 처리하였다.
     * JPQLTemplates에서 group_concat을 지원하지 않는다.
     * 위 이유로 todos table의 display_content를 생성하는 기능을 native query로 처리하였다.

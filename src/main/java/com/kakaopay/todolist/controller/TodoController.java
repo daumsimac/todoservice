@@ -1,6 +1,7 @@
 package com.kakaopay.todolist.controller;
 
 import com.kakaopay.todolist.dto.TodoDTO;
+import com.kakaopay.todolist.entity.Todo;
 import com.kakaopay.todolist.service.TodoService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -11,7 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
+@RequestMapping("/api/v1/todos")
 public class TodoController {
 
     @Autowired
@@ -21,7 +25,7 @@ public class TodoController {
             @ApiImplicitParam(name="test", dataType = "string", paramType = "query", value="Test")
     )
     @PostMapping(
-            value = "/api/v1/todo",
+            value = "/",
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE },
             consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
@@ -33,7 +37,7 @@ public class TodoController {
             @ApiImplicitParam(name="test", dataType = "string", paramType = "query", value="Test")
     )
     @PutMapping(
-            value = "/api/v1/todo/{id}",
+            value = "/{id}",
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE },
             consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
@@ -45,7 +49,7 @@ public class TodoController {
             @ApiImplicitParam(name="test", dataType = "string", paramType = "query", value="Test")
     )
     @DeleteMapping(
-            value = "/api/v1/todo/{id}",
+            value = "/{id}",
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
     public TodoDTO.DeleteResponse deleteTodo (@PathVariable("id") int id) {
@@ -53,7 +57,7 @@ public class TodoController {
     }
 
     @PostMapping(
-            value = "/api/v1/todo/{id}/complete",
+            value = "/{id}/complete",
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
     public TodoDTO.UpdateResponse complete (@PathVariable("id") int id) {
@@ -61,7 +65,7 @@ public class TodoController {
     }
 
     @GetMapping(
-            value = "/api/v1/todo/{id}",
+            value = "/{id}",
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
     public TodoDTO.FindOneResponse getTodo (@PathVariable("id") int id) {
@@ -72,7 +76,7 @@ public class TodoController {
             @ApiImplicitParam(name="test", dataType = "string", paramType = "query", value="Test")
     )
     @GetMapping(
-            value = "/api/v1/todos",
+            value = "/",
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
     public Page<TodoDTO.FindAllResponse> getTodos (Pageable pageable) {
