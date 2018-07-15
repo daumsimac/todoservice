@@ -23,9 +23,6 @@ public class TodoController {
     @Autowired
     private TodoService todoService;
 
-    @ApiImplicitParams(
-            @ApiImplicitParam(name="test", dataType = "string", paramType = "query", value="Test")
-    )
     @PostMapping(
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE },
             consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE }
@@ -34,9 +31,6 @@ public class TodoController {
         return todoService.create(todoDTO);
     }
 
-    @ApiImplicitParams(
-            @ApiImplicitParam(name="test", dataType = "string", paramType = "query", value="Test")
-    )
     @PutMapping(
             value = "/{id}",
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE },
@@ -46,9 +40,6 @@ public class TodoController {
         return todoService.update(id, todoDTO);
     }
 
-    @ApiImplicitParams(
-            @ApiImplicitParam(name="test", dataType = "string", paramType = "query", value="Test")
-    )
     @DeleteMapping(
             value = "/{id}",
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE }
@@ -73,9 +64,6 @@ public class TodoController {
         return todoService.get(id);
     }
 
-    @ApiImplicitParams(
-            @ApiImplicitParam(name="test", dataType = "string", paramType = "query", value="Test")
-    )
     @GetMapping(
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )

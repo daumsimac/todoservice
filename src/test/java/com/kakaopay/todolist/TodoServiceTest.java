@@ -1,7 +1,6 @@
 package com.kakaopay.todolist;
 
 import com.kakaopay.todolist.dto.TodoDTO;
-import com.kakaopay.todolist.dto.TreePathDTO;
 import com.kakaopay.todolist.service.TodoService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -141,5 +140,33 @@ public class TodoServiceTest {
 
         String displayContent = content + " @" + createResponse.getId();
         Assert.assertEquals(displayContent, findOneResponse.getDisplayContent());
+    }
+
+    @Test
+    public void testCompleteTest () {
+        String content = "Todo";
+
+        TodoDTO.CreateResponse createResponse = createTodo(content, null);
+
+        TodoDTO.UpdateResponse updateResponse = todoService.complete(createResponse.getId());
+
+        Assert.assertNotNull(updateResponse.getCompletedAt());
+
+        createResponse = createTodo(content, null);
+        TodoDTO.CreateResponse createChildResponse = createTodo(content, createResponse.getId());
+
+        try {
+            todoService.complete(createResponse.getId());
+            Assert.assertTrue(false);
+        }
+        catch (Exception e) {
+            Assert.assertTrue(true);
+        }
+
+        updateResponse = todoService.complete(createChildResponse.getId());
+        Assert.assertNotNull(updateResponse.getCompletedAt());
+
+        updateResponse = todoService.complete(createResponse.getId());
+        Assert.assertNotNull(updateResponse.getCompletedAt());
     }
 }
