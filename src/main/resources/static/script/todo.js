@@ -53,7 +53,10 @@ $(document).ready(() => {
                 data: 'id'
             },
             {
-                data: 'display_content'
+                data: 'display_content',
+                render : (data, type, row, meta) => {
+                    return data + '<span><button type="button" class="btn btn-success modify-todo-button btn-sm" data-toggle="modal" data-target="#modifyTodoModal" data-todo-id="'+row['id']+'">수정하기</button></span>'
+                }
             },
             {
                 data: 'created_at'
