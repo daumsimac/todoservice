@@ -1,21 +1,5 @@
 'use strict';
 
-function loadTodos () {
-    todoApi.getTodos((errorMessage, response) => {
-        if (errorMessage != null) {
-            return alert('할일들을 불러오지 못하였습니다.(' + errorMessage + ')');
-         }
-
-         var referenceSelect = $('#todo-reference-select');
-         for (var i in response.data.content) {
-             referenceSelect.append($('<option>', {
-                 value : response.data.content[i].id,
-                 text : response.data.content[i].display_content
-             }));
-         }
-    });
-}
-
 function completeTodo (todoId) {
     todoApi.completeTodo(todoId, (errorMessage, response) => {
         if (errorMessage != null) {
@@ -44,6 +28,17 @@ $(document).ready(() => {
                 if (errorMessage != null) {
                     alert('할일들을 불러오지 못하였습니다.(' + errorMessage + ')');
                     return false;
+                }
+
+                $('#todo-reference-select option').remove();
+                var referenceSelect = $('#todo-reference-select');
+                referenceSelect.append('<option value="">참조</option>');
+
+                for (var i in response.data.content) {
+                    referenceSelect.append($('<option>', {
+                        value : response.data.content[i].id,
+                        text : response.data.content[i].display_content
+                    }));
                 }
 
                 callback({
@@ -87,8 +82,11 @@ $(document).ready(() => {
             return alert('할일을 입력해주세요.');
         }
 
+        var parentId = $('#todo-reference-select').val();
+
         todoApi.createTodo({
-            content : todoContent
+            content : todoContent,
+            parent_id : parentId
         }, (errorMessage, response) => {
             if (errorMessage != null) {
                 return alert('할일 등록에 실패하였습니다.(' + errorMessage + ')');

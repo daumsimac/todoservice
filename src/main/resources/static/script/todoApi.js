@@ -10,7 +10,7 @@ let todoApi = (() => {
         }).then((response) => {
             callback(null, response);
         }).catch((response) => {
-            let responseBody = response.responseBody;
+            let responseBody = response.responseJSON;
             let message = responseBody.message;
             callback(message, responseBody);
         });
@@ -26,7 +26,7 @@ let todoApi = (() => {
         }).then((response) => {
             callback(null, response);
         }).catch((response) => {
-            let responseBody = response.responseBody;
+            let responseBody = response.responseJSON;
             let message = responseBody.message;
             callback(message, responseBody);
         });
@@ -39,7 +39,7 @@ let todoApi = (() => {
         }).then((response) => {
             callback(null, response);
         }).catch((response) => {
-            let responseBody = response.responseBody;
+            let responseBody = response.responseJSON;
             let message = responseBody.message;
             callback(message, responseBody);
         })
