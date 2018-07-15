@@ -1,11 +1,11 @@
 'use strict';
 
 let todoApi = (() => {
-    const API_PREFIX = '/api/v1/todos/';
+    const API_PREFIX = '/api/v1/todos';
 
-    function _getTodos (callback) {
+    function _getTodos (page, callback) {
         $.ajax({
-            url : API_PREFIX,
+            url : API_PREFIX + '?page=' + page,
             method : 'get',
         }).then((response) => {
             callback(null, response);
@@ -32,8 +32,22 @@ let todoApi = (() => {
         });
     }
 
+    function _completeTodo (id, callback) {
+        $.ajax({
+            url : API_PREFIX + '/' + id + '/complete',
+            method : 'post',
+        }).then((response) => {
+            callback(null, response);
+        }).catch((response) => {
+            let responseBody = response.responseBody;
+            let message = responseBody.message;
+            callback(message, responseBody);
+        })
+    }
+
     return {
         getTodos : _getTodos,
-        createTodo : _createTodo
+        createTodo : _createTodo,
+        completeTodo : _completeTodo
     };
 })();

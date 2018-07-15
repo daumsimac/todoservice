@@ -5,6 +5,7 @@ import com.kakaopay.todolist.entity.Todo;
 import com.kakaopay.todolist.service.TodoService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/todos")
 public class TodoController {
@@ -25,7 +27,6 @@ public class TodoController {
             @ApiImplicitParam(name="test", dataType = "string", paramType = "query", value="Test")
     )
     @PostMapping(
-            value = "/",
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE },
             consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
@@ -76,10 +77,10 @@ public class TodoController {
             @ApiImplicitParam(name="test", dataType = "string", paramType = "query", value="Test")
     )
     @GetMapping(
-            value = "/",
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
     public Page<TodoDTO.FindAllResponse> getTodos (Pageable pageable) {
+        log.info("TEST : " + pageable);
         return todoService.findAll(pageable);
     }
 }
