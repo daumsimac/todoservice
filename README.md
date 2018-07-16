@@ -60,24 +60,28 @@ ____
   >
   > Method : DELETE
   >
+  ----
   
   * 할일 완료
   > URL : /api/v1/todos/{id}/complete
   >
   > Method : POST
   >
+  ----
   
   * 할일 가져오기
   > URL : /api/v1/todos/{id}
   >
   > Method : GET
   >
+  ----
   
   * 할일 리스트
   > URL : /api/v1/todos
   >
   > Method : GET
   >
+  ----
 
 **Usage**
 
