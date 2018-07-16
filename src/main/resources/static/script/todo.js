@@ -16,6 +16,16 @@ function injectTodoIdToModal (todoId, content) {
     $('#todo-modify-input').val(content);
 }
 
+function deleteTodo (todoId) {
+    todoApi.deleteTodo(todoId, (errorMessage, response) => {
+        if (errorMessage != null) {
+            return alert('할일 삭제에 실패하였습니다.(' + errorMessage + ')');
+        }
+
+        $('#todo-list').DataTable().ajax.reload(null, false);
+    });
+}
+
 $(document).ready(() => {
     $('#todo-list').DataTable({
         processing : true,
@@ -70,17 +80,22 @@ $(document).ready(() => {
             {
                 targets : 2,
                 className : 'text-center',
-                width : '20%'
+                width : '15%'
             },
             {
                 targets : 3,
                 className : 'text-center',
-                width : '20%'
+                width : '15%'
             },
             {
                 targets : 4,
                 className : 'text-center',
-                width : '20%'
+                width : '15%'
+            },
+            {
+                targets : 5,
+                className : 'text-center',
+                witdh : '15%'
             }
         ],
         columns: [
@@ -111,6 +126,11 @@ $(document).ready(() => {
                     else {
                         return data;
                     }
+                }
+            },
+            {
+                render : (data, type, row, meta) => {
+                    return '<button type="button" class="btn btn-danger delete-todo-button" onclick="deleteTodo('+row['id']+');">삭제하기</button>';
                 }
             }
         ]
@@ -154,16 +174,10 @@ $(document).ready(() => {
                 return alert('할일 수정에 실패하였습니다.(' + errorMessage + ')');
             }
 
-            console.log('DEBUG : ddddddddddd');
             $('#todo-modify-input').val('');
             $('#hiddenValue').val('');
             $('#modifyTodoModal').modal('toggle');
             $('#todo-list').DataTable().ajax.reload(null, false);
         });
     });
-
-    /*
-    $('#modify-todo-button').click(() => {
-    });
-    */
 });

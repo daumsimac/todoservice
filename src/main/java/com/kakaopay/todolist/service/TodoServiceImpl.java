@@ -35,8 +35,8 @@ public class TodoServiceImpl implements TodoService {
 
         Todo todo = new Todo();
 
-        if (todo.getContent() == null || todo.getContent().isEmpty()) {
-            throw new InvalidTodoReqeustException("Content is NULL.");
+        if (todoDTO.getContent() == null || todoDTO.getContent().isEmpty()) {
+            throw new InvalidTodoReqeustException("Content is NULL or empty.");
         }
 
         todo.setContent(todoDTO.getContent());

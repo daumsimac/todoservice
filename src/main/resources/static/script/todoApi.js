@@ -52,20 +52,34 @@ let todoApi = (() => {
     function _completeTodo (id, callback) {
         $.ajax({
             url : API_PREFIX + '/' + id + '/complete',
-            method : 'post',
+            method : 'post'
         }).then((response) => {
             callback(null, response);
         }).catch((response) => {
             let responseBody = response.responseJSON;
             let message = responseBody.message;
             callback(message, responseBody);
-        })
+        });
+    }
+
+    function _deleteTodo (id, callback) {
+        $.ajax({
+            url : API_PREFIX + '/' + id,
+            method : 'delete'
+        }).then((response) => {
+            callback(null, response);
+        }).catch((response) => {
+            let responseBody = response.responseJSON;
+            let message = responseBody.message;
+            callback(message, responseBody);
+        });
     }
 
     return {
         getTodos : _getTodos,
         createTodo : _createTodo,
         updateTodo : _updateTodo,
-        completeTodo : _completeTodo
+        completeTodo : _completeTodo,
+        deleteTodo : _deleteTodo
     };
 })();

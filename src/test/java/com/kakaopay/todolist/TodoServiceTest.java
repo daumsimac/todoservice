@@ -1,6 +1,7 @@
 package com.kakaopay.todolist;
 
 import com.kakaopay.todolist.dto.TodoDTO;
+import com.kakaopay.todolist.dto.TreePathDTO;
 import com.kakaopay.todolist.service.TodoService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -168,5 +169,58 @@ public class TodoServiceTest {
 
         updateResponse = todoService.complete(createResponse.getId());
         Assert.assertNotNull(updateResponse.getCompletedAt());
+    }
+
+    @Test
+    public void testMoveSubtree () {
+        String content = "Todo";
+        List<Integer> parentIds = new ArrayList<>();
+
+        TodoDTO.CreateResponse createResponse = createTodo(content, null);
+        parentIds.add(createResponse.getId());
+
+        createResponse = createTodo(content, null);
+        parentIds.add(createResponse.getId());
+
+        createResponse = createTodo(content, parentIds.get(0));
+        int childId = (createTodo(content, createResponse.getId())).getId();
+
+        TodoDTO.FindOneResponse findOneResponse = todoService.get(createResponse.getId());
+
+        boolean found = false;
+        for (TreePathDTO treePathDTO : findOneResponse.getAncestors()) {
+            if (treePathDTO.getAncestor() == parentIds.get(0)) {
+                found = true;
+            }
+        }
+
+        Assert.assertTrue(found);
+
+        TodoDTO.UpdateRequest updateRequest = new TodoDTO.UpdateRequest();
+        updateRequest.setParentId(parentIds.get(1));
+
+        TodoDTO.UpdateResponse updateResponse = todoService.update(findOneResponse.getId(), updateRequest);
+
+        Assert.assertEquals(findOneResponse.getId(), updateResponse.getId());
+
+        findOneResponse = todoService.get(updateResponse.getId());
+
+        Assert.assertEquals(updateResponse.getId(), findOneResponse.getId());
+
+        found = false;
+        for (TreePathDTO treePathDTO : findOneResponse.getAncestors()) {
+            if (treePathDTO.getAncestor() == parentIds.get(1)) {
+                found = true;
+            }
+        }
+        Assert.assertTrue(found);
+
+        found = false;
+        for (TreePathDTO treePathDTO : findOneResponse.getDescendants()) {
+            if (treePathDTO.getDescendant() == childId) {
+                found = true;
+            }
+        }
+        Assert.assertTrue(found);
     }
 }
