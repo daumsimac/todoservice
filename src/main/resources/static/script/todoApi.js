@@ -32,6 +32,23 @@ let todoApi = (() => {
         });
     }
 
+    function _updateTodo (id, param, callback) {
+        $.ajax({
+            url : API_PREFIX + '/' + id,
+            method : 'put',
+            data: JSON.stringify(param),
+            contentType : 'application/json',
+            dataType : 'json'
+        }).then((response) => {
+            callback(null, response);
+        }).catch((response) => {
+            console.log(JSON.stringify(response));
+            let responseBody = response.responseJSON;
+            let message = responseBody.message;
+            callback(message, responseBody);
+        });
+    }
+
     function _completeTodo (id, callback) {
         $.ajax({
             url : API_PREFIX + '/' + id + '/complete',
@@ -48,6 +65,7 @@ let todoApi = (() => {
     return {
         getTodos : _getTodos,
         createTodo : _createTodo,
+        updateTodo : _updateTodo,
         completeTodo : _completeTodo
     };
 })();

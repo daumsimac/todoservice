@@ -5,6 +5,7 @@ import com.kakaopay.todolist.entity.Todo;
 import com.kakaopay.todolist.entity.TreePath;
 import com.kakaopay.todolist.exception.ContentNotFoundException;
 import com.kakaopay.todolist.exception.InvalidMoveTargetException;
+import com.kakaopay.todolist.exception.ParentCompletedException;
 import com.kakaopay.todolist.exception.TodoDependencyException;
 import com.kakaopay.todolist.repository.TodoRepository;
 import com.kakaopay.todolist.repository.TreePathRepository;
@@ -33,10 +34,6 @@ public class TodoServiceImpl implements TodoService {
 
     @Transactional
     public TodoDTO.CreateResponse create (TodoDTO.CreateRequest todoDTO) {
-        if (todoDTO.getParentId() != null && getTodo(todoDTO.getParentId()).isPresent() == false) {
-            throw new ContentNotFoundException("Couldn't find parent TODO(" + todoDTO.getParentId() + ")");
-        }
-
         Date currentDate = Calendar.getInstance().getTime();
 
         Todo todo = new Todo();
@@ -49,6 +46,15 @@ public class TodoServiceImpl implements TodoService {
 
         int parentId = todo.getId();
         if (todoDTO.getParentId() != null) {
+            Optional<Todo> parentTodo = getTodo(todoDTO.getParentId());
+            if (parentTodo.isPresent() == false) {
+                throw new ContentNotFoundException("Couldn't find parent TODO(" + todoDTO.getParentId() + ")");
+            }
+
+            if (parentTodo.get().isCompleted()) {
+                throw new ParentCompletedException("Parent(" + todoDTO.getParentId() + ") is already completed.");
+            }
+
             parentId = todoDTO.getParentId();
         }
 
@@ -74,6 +80,13 @@ public class TodoServiceImpl implements TodoService {
 
         if (todoDTO.getContent() != null) {
             todo.setContent(todoDTO.getContent());
+
+            String displayContent = todoRepository.createDisplayContent(todo.getId());
+            if (displayContent == null) {
+                displayContent = todo.getContent();
+            }
+
+            todo.setDisplayContent(displayContent);
         }
 
         todo.setUpdatedAt(Calendar.getInstance().getTime());

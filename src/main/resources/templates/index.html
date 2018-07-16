@@ -19,8 +19,8 @@
         <div class="container">
             <table>
                 <colgroup>
-                    <col width="80%" />
-                    <col width="10%" />
+                    <col width="60%" />
+                    <col width="30%" />
                     <col width="10%" />
                 </colgroup>
                 <tr>
@@ -69,10 +69,11 @@
 
                     <div class="modal-body">
                         <input id="todo-modify-input" type="text" class="form-control" />
+                        <input type="hidden" name="hiddenValue" id="hiddenValue" value="" />
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" data-dismiss="modal">확인</button>
+                        <button id="modify-todo-button" type="button" class="btn btn-success">확인</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">취소</button>
                     </div>
 

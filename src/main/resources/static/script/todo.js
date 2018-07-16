@@ -10,6 +10,12 @@ function completeTodo (todoId) {
     });
 }
 
+function injectTodoIdToModal (todoId, content) {
+    console.log('todoId = ' + todoId + ', content = ' + content);
+    $(".modal-body #hiddenValue").val(todoId);
+    $('#todo-modify-input').val(content);
+}
+
 $(document).ready(() => {
     $('#todo-list').DataTable({
         processing : true,
@@ -35,6 +41,8 @@ $(document).ready(() => {
                 referenceSelect.append('<option value="">참조</option>');
 
                 for (var i in response.data.content) {
+                    if (response.data.content[i].completed_at != null) continue;
+
                     referenceSelect.append($('<option>', {
                         value : response.data.content[i].id,
                         text : response.data.content[i].display_content
@@ -48,15 +56,45 @@ $(document).ready(() => {
                 });
             });
         },
+        columnDefs : [
+            {
+                targets : 0,
+                className : 'text-center',
+                width : '10%'
+            },
+            {
+                targets : 1,
+                className : 'text-center',
+                width : '30%'
+            },
+            {
+                targets : 2,
+                className : 'text-center',
+                width : '20%'
+            },
+            {
+                targets : 3,
+                className : 'text-center',
+                width : '20%'
+            },
+            {
+                targets : 4,
+                className : 'text-center',
+                width : '20%'
+            }
+        ],
         columns: [
             {
-                data: 'id'
+                data: 'id',
+                width : '10%'
             },
             {
                 data: 'display_content',
                 render : (data, type, row, meta) => {
-                    return data + '<span><button type="button" class="btn btn-success modify-todo-button btn-sm" data-toggle="modal" data-target="#modifyTodoModal" data-todo-id="'+row['id']+'">수정하기</button></span>'
-                }
+                    return data + '<span><button type="button" class="btn btn-success modify-todo-button btn-sm" ' +
+                        'data-toggle="modal" data-target="#modifyTodoModal" ' +
+                        ' onclick="injectTodoIdToModal('+row['id']+ ',\'' + row['content'] + '\');">수정하기</button></span>';
+                },
             },
             {
                 data: 'created_at'
@@ -68,7 +106,7 @@ $(document).ready(() => {
                 data: 'completed_at',
                 render : (data, type, row, meta) => {
                     if (data == null) {
-                        return '<button type="button" class="btn btn-success complete-todo-button" onclick="completeTodo('+row['id']+')">완료하기</button>';
+                        return '<button type="button" class="btn btn-success complete-todo-button" onclick="completeTodo('+row['id']+');">완료하기</button>';
                     }
                     else {
                         return data;
@@ -99,4 +137,33 @@ $(document).ready(() => {
             $('#todo-list').DataTable().ajax.reload(null, false);
         });
     });
+
+    $(document).on('click', '#modify-todo-button', () => {
+        var todoContent = $('#todo-modify-input').val();
+
+        if (!todoContent || todoContent == '') {
+            return alert('할일을 입력해주세요.');
+        }
+
+        var todoId = $('#hiddenValue').val();
+
+        todoApi.updateTodo(todoId, {
+            content : todoContent
+        }, (errorMessage, response) => {
+            if (errorMessage != null) {
+                return alert('할일 수정에 실패하였습니다.(' + errorMessage + ')');
+            }
+
+            console.log('DEBUG : ddddddddddd');
+            $('#todo-modify-input').val('');
+            $('#hiddenValue').val('');
+            $('#modifyTodoModal').modal('toggle');
+            $('#todo-list').DataTable().ajax.reload(null, false);
+        });
+    });
+
+    /*
+    $('#modify-todo-button').click(() => {
+    });
+    */
 });

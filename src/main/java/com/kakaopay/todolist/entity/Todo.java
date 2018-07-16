@@ -37,4 +37,8 @@ public class Todo {
 
     @OneToMany(mappedBy = "ancestor", targetEntity = TreePath.class, fetch = FetchType.LAZY)
     private List<TreePath> descendants;
+
+    public boolean isCompleted () {
+        return (completedAt != null);
+    }
 }

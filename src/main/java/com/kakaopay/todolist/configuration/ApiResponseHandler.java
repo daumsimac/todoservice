@@ -4,6 +4,7 @@ import com.kakaopay.todolist.dto.ApiErrorResponse;
 import com.kakaopay.todolist.dto.ApiResponse;
 import com.kakaopay.todolist.exception.ContentNotFoundException;
 import com.kakaopay.todolist.exception.InvalidMoveTargetException;
+import com.kakaopay.todolist.exception.ParentCompletedException;
 import com.kakaopay.todolist.exception.TodoDependencyException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
@@ -40,7 +41,8 @@ public class ApiResponseHandler implements ResponseBodyAdvice<Object> {
     @ExceptionHandler(
             value = {
                     InvalidMoveTargetException.class,
-                    TodoDependencyException.class
+                    TodoDependencyException.class,
+                    ParentCompletedException.class
             }
     )
     @ResponseBody

@@ -68,7 +68,6 @@ public class TodoController {
             produces = { MediaType.APPLICATION_JSON_UTF8_VALUE }
     )
     public Page<TodoDTO.FindAllResponse> getTodos (Pageable pageable) {
-        log.info("TEST : " + pageable);
         return todoService.findAll(pageable);
     }
 }
