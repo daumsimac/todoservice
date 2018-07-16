@@ -11,7 +11,7 @@ let todoApi = (() => {
             callback(null, response);
         }).catch((response) => {
             let responseBody = response.responseJSON;
-            let message = responseBody.message;
+            let message = responseBody.data.message;
             callback(message, responseBody);
         });
     }
@@ -27,7 +27,7 @@ let todoApi = (() => {
             callback(null, response);
         }).catch((response) => {
             let responseBody = response.responseJSON;
-            let message = responseBody.message;
+            let message = responseBody.data.message;
             callback(message, responseBody);
         });
     }
@@ -44,7 +44,7 @@ let todoApi = (() => {
         }).catch((response) => {
             console.log(JSON.stringify(response));
             let responseBody = response.responseJSON;
-            let message = responseBody.message;
+            let message = responseBody.data.message;
             callback(message, responseBody);
         });
     }
@@ -57,7 +57,7 @@ let todoApi = (() => {
             callback(null, response);
         }).catch((response) => {
             let responseBody = response.responseJSON;
-            let message = responseBody.message;
+            let message = responseBody.data.message;
             callback(message, responseBody);
         });
     }
@@ -70,7 +70,7 @@ let todoApi = (() => {
             callback(null, response);
         }).catch((response) => {
             let responseBody = response.responseJSON;
-            let message = responseBody.message;
+            let message = responseBody.data.message;
             callback(message, responseBody);
         });
     }
