@@ -3,10 +3,7 @@ package com.kakaopay.todolist.service;
 import com.kakaopay.todolist.dto.TodoDTO;
 import com.kakaopay.todolist.entity.Todo;
 import com.kakaopay.todolist.entity.TreePath;
-import com.kakaopay.todolist.exception.ContentNotFoundException;
-import com.kakaopay.todolist.exception.InvalidMoveTargetException;
-import com.kakaopay.todolist.exception.ParentCompletedException;
-import com.kakaopay.todolist.exception.TodoDependencyException;
+import com.kakaopay.todolist.exception.*;
 import com.kakaopay.todolist.repository.TodoRepository;
 import com.kakaopay.todolist.repository.TreePathRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +34,10 @@ public class TodoServiceImpl implements TodoService {
         Date currentDate = Calendar.getInstance().getTime();
 
         Todo todo = new Todo();
+
+        if (todo.getContent() == null || todo.getContent().isEmpty()) {
+            throw new InvalidTodoReqeustException("Content is NULL.");
+        }
 
         todo.setContent(todoDTO.getContent());
         todo.setUpdatedAt(currentDate);

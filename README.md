@@ -19,7 +19,65 @@ $ ./gradlew clean build
 $ ./startup.sh
 ```
 
-**API Document**
+**API**
+
+기본 구조
+  * Data Type : JSON
+  
+| Property | Description | Etc                                                      |
+|:----------|:-------------|:----------------------------------------------------------|
+| code     | 응답코드    | 200, 400, 404와 같이 Http Status code로 처리결과를 나타냄|
+| message  | HTTP Reason Phrase 메시지 |                                        |
+| data     | 반환 데이터 |                                                          |
+____
+
+  * 할일 생성
+  > URL : /api/v1/todos
+  >
+  > Method : POST
+  >
+  
+  | Property | Data Type | Mandatory |
+  |:---------|:----------|:----------|
+  | content  | String    | Y  |
+  | parent_id | Integer | N |
+  ----
+  
+  * 할일 수정
+  > URL : /api/v1/todos/{id}
+  >
+  > Method : PUT
+  >
+  
+  | Property | Data Type | Mandatory |
+  |:---------|:----------|:----------|
+  | content  | String    | N  |
+  | parent_id | Integer | N |
+  ----
+  
+  * 할일 삭제
+  > URL : /api/v1/todos/{id}
+  >
+  > Method : DELETE
+  >
+  
+  * 할일 완료
+  > URL : /api/v1/todos/{id}/complete
+  >
+  > Method : POST
+  >
+  
+  * 할일 가져오기
+  > URL : /api/v1/todos/{id}
+  >
+  > Method : GET
+  >
+  
+  * 할일 리스트
+  > URL : /api/v1/todos
+  >
+  > Method : GET
+  >
 
 **Usage**
 
@@ -125,6 +183,7 @@ $ ./startup.sh
 
 * 완료한 할일은 다시 미완료로 되돌릴 수 없다.
 * 할일을 삭제하면 참조가 걸린 할일들(Child node) 모두 삭제한다.
+* 이미 완료한 할일을 참조로 걸 수 없다.
 
 ## 4. 실제 Frontend에서 구현한 부분
 
@@ -136,3 +195,23 @@ $ ./startup.sh
   * X-Editable을 이용하려 했으나 설정같은거 살펴보고 붙이려고 하니 시간이 부족했음.
   * 그냥 수정 버튼 만들고 Modal Popup 뛰워서 처리하는 걸로 계획 변경.
 
+## 5. Future Works
+
+* Tree 구조에 대한 CRUD Library Class 작성
+```
+지극히 개인적인 핑계지만 평일에는 시간이 거의 나지 않아서 주말 이틀에 몰아서 작업해야하고 나한테는 매우 서투른
+Frontend 관련 작업까지 하려다 보니 Backend쪽 작업에 조금 소홀했던 면이 있다. 그중 특히 Tree 관련 연산하는 부분이 매우 마음에 들지 않는다.
+시간이 좀 더 있었더라면 저 부분 필요한 Interface 정의하여 Library Class로 분리하고 새로 구현한 Class를 이용하도록 서비스를 구현해보고 싶다.
+```
+
+* Listing API 개선
+```
+현재 Listing API는 그냥 flat하게 모든 자료를 가져와서 보여주는 형태이다. 하지만, 내부적으로는 부모/자식 관계, 조상/자손 관계를 가지고 있으므로
+Frontend에서 제대로 List를 보여주려면 Tree 형태로 Listing API가 구성되어야 할 필요가 있다. 
+```
+
+* Frontend에서 할일의 부모 변경 기능 추가
+```
+Frontend 작업에 미숙한 점과 시간문제까지 더해져서 Frontend에서 할일의 부모 변경 기능을 넣지 못하였다. 좀 더 쓸만한 어플리케이션이 되려면
+할일의 부모 변경 기능이 있어야 할 것 같은데 API에서는 지원하지만 Frontend에 붙이지 못한 점이 아쉽다.
+```

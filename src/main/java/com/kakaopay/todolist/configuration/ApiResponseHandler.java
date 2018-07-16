@@ -2,10 +2,7 @@ package com.kakaopay.todolist.configuration;
 
 import com.kakaopay.todolist.dto.ApiErrorResponse;
 import com.kakaopay.todolist.dto.ApiResponse;
-import com.kakaopay.todolist.exception.ContentNotFoundException;
-import com.kakaopay.todolist.exception.InvalidMoveTargetException;
-import com.kakaopay.todolist.exception.ParentCompletedException;
-import com.kakaopay.todolist.exception.TodoDependencyException;
+import com.kakaopay.todolist.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
@@ -42,7 +39,8 @@ public class ApiResponseHandler implements ResponseBodyAdvice<Object> {
             value = {
                     InvalidMoveTargetException.class,
                     TodoDependencyException.class,
-                    ParentCompletedException.class
+                    ParentCompletedException.class,
+                    InvalidTodoReqeustException.class
             }
     )
     @ResponseBody
@@ -76,9 +74,6 @@ public class ApiResponseHandler implements ResponseBodyAdvice<Object> {
             }
             catch (IllegalArgumentException iae) {}
         }
-        else if (body instanceof ApiErrorResponse) {
-            ret = body;
-        }
         else {
             for (Annotation annotation : returnType.getMethodAnnotations()) {
                 if (annotation instanceof ResponseStatus) {
@@ -88,7 +83,7 @@ public class ApiResponseHandler implements ResponseBodyAdvice<Object> {
                 }
             }
 
-            ret = new ApiResponse(httpStatus.value(), body);
+            ret = new ApiResponse(httpStatus.value(), httpStatus.getReasonPhrase(), body);
         }
 
         return ret;
