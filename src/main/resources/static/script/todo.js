@@ -106,9 +106,9 @@ $(document).ready(() => {
             {
                 data: 'display_content',
                 render : (data, type, row, meta) => {
-                    return data + '<span><button type="button" class="btn btn-success modify-todo-button btn-sm" ' +
+                    return '<span><button type="button" class="btn btn-light btn-block modify-todo-button btn-sm" ' +
                         'data-toggle="modal" data-target="#modifyTodoModal" ' +
-                        ' onclick="injectTodoIdToModal('+row['id']+ ',\'' + row['content'] + '\');">수정하기</button></span>';
+                        ' onclick="injectTodoIdToModal('+row['id']+ ',\'' + row['content'] + '\');">'+ data + '</button></span>';
                 },
             },
             {

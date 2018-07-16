@@ -74,6 +74,25 @@ ____
   >
   > Method : GET
   >
+  > Response
+  
+  TreePath
+  
+  | Property | Data Type | Format |
+  |:---------|:----------|:-------|
+  | ancestor | Integer | |
+  | descendant | Integer | |
+  
+  | Property | Data Type | Format |
+  |:---------|:----------|:-------|
+  | id  | Integer    | |
+  | content | String | |
+  | display_content | String | |
+  | created_at | String | YYYY-MM-DD HH-MI-SS |
+  | updated_at | String | YYYY-MM-DD HH-MI-SS |
+  | completed_at | String | YYYY-MM-DD HH-MI-SS |
+  | ancestors | Array\<TreePath\> | |
+  | descendants | Array\<TreePath\> | |
   ----
   
   * 할일 리스트
@@ -81,6 +100,16 @@ ____
   >
   > Method : GET
   >
+  > Response
+  
+  | Property | Data Type | Format |
+  |:---------|:----------|:-------|
+  | id  | Integer    | |
+  | content | String | |
+  | display_content | String | |
+  | created_at | String | YYYY-MM-DD HH-MI-SS |
+  | updated_at | String | YYYY-MM-DD HH-MI-SS |
+  | completed_at | String | YYYY-MM-DD HH-MI-SS |
   ----
 
 **Usage**
@@ -162,7 +191,7 @@ ____
      자신의 조상들의 정보를 얻어서 저장해뒀다가 조회시 단순히 보여주는 것이 매번 조회 시 자신의 조상들을 조회하여 문자열을 만드는 것 보다
      효율적이라고 생각하였다.
 
-#### 2. 3. Persistent Layer 구현
+#### 2. 3. Repository Layer 구현
 
 * EntityManager를 이용한 Native Query 작성
   * 가급적 JPA를 이용하여 ORM으로 처리하는 것을 처음 설계를 하였을 때 원칙으로 하였다.
@@ -203,11 +232,12 @@ ____
 
 ## 5. Future Works
 
-* Tree 구조에 대한 CRUD Library Class 작성
+* Closer Table에 대한 모델링 개선
 ```
 지극히 개인적인 핑계지만 평일에는 시간이 거의 나지 않아서 주말 이틀에 몰아서 작업해야하고 나한테는 매우 서투른
-Frontend 관련 작업까지 하려다 보니 Backend쪽 작업에 조금 소홀했던 면이 있다. 그중 특히 Tree 관련 연산하는 부분이 매우 마음에 들지 않는다.
-시간이 좀 더 있으면 저 부분 필요한 Interface 정의하여 Library Class로 분리하고 새로 구현한 Class를 이용하도록 서비스를 구현해보고 싶다.
+Frontend 관련 작업까지 하려다 보니 Backend쪽 작업 특히 Close Table을 어플리케이션에서 표현하는 모델링에 조금 소홀했던 면이 있다.
+현재 구현에서 Closer Table을 이용하여 트리 이동, 새로운 트리 생성과 같이 트리 관련 연산하는 부분이 매우 마음에 들지 않는다.
+시간이 좀 더 주어진다면 Close Table을 어플리케이션에서 Tree 형태로 구현하는 Class를 만들어서 이를 이용하는 형태로 개선해보고 싶다.
 ```
 
 * Listing API 개선
@@ -227,3 +257,12 @@ Frontend 작업에 미숙한 점과 시간문제까지 더해져서 Frontend에�
 현재 구현에서 Subtree를 떼어낼 수 없으며 같은 부모로 이동하는 동작에 대해서 무시하지 못하는 버그가 존재한다.
 자신의 직계 조상을 todos에 저장하고 이를 이용하면 쉽게 구현이 가능할 것 같다. 
 ```
+
+## 6. 후기(?)
+
+처음에 과제가 주어지고 내가 계획한거에 비해서 상당부분 미흡하게 마무리하고 제출해야 해서 아쉬운 부분이 많다.
+특히 Closer Table을 어플리케이션에서 깔끔하게 표현하도록 모델링을 진행하지 못한 부분은 상당기간 뇌리에 남아서 나 스스로를 괴롭힐 것 같다.
+또한, 과제를 끝내려고 보니 여기저기 보이는 구멍들이 쉽사리 미련을 버리지 못하게 하지만 기한도 존재하며
+생업을 위해 또 출근을 해야하며 지금 현재는 재직중인 회사의 녹을 먹고 있는 처지라 과제에 100% 최선을 다하지 못하는 상황을
+스스로에게 양해를 구해본다.
+조금 더 시간이 있었다면 좀 더 좋은 결과물을 만들 수 있었을 거라는 지극히 개인적인 핑계를 대보고 싶다.
