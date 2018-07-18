@@ -110,6 +110,8 @@ public class TodoServiceImpl implements TodoService {
             throw new ContentNotFoundException("Couldn't find TODO(" + id + ")");
         }
 
+        TodoDTO.DeleteResponse ret = modelMapper.map(optionalTodo.get(), TodoDTO.DeleteResponse.class);
+
         List<TreePath> treePathList = treePathRepository.findByAncestor(id);
         List<Integer> deleteIds = new ArrayList<>();
 
@@ -120,7 +122,7 @@ public class TodoServiceImpl implements TodoService {
         treePathRepository.deleteByDescendantIn(deleteIds);
         todoRepository.deleteByIdIn(deleteIds);
 
-        return modelMapper.map(optionalTodo.get(), TodoDTO.DeleteResponse.class);
+        return ret;
     }
 
     @Transactional
