@@ -67,6 +67,8 @@ public class TodoServiceImpl implements TodoService {
         }
         todo.setDisplayContent(displayContent);
 
+        todoRepository.save(todo);
+
         return modelMapper.map(todo, TodoDTO.CreateResponse.class);
     }
 
